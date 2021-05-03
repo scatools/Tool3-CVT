@@ -11,7 +11,8 @@ vars <- c(
 body <- dashboardBody(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
-    tags$link(rel = "stylesheet", type = "text/css", href = "button.css")
+    tags$link(rel = "stylesheet", type = "text/css", href = "button.css"),
+    useShinyjs()
   ),
   fluidRow(
     column(width = 8,
@@ -59,30 +60,32 @@ body <- dashboardBody(
                                       pickerInput("habitat","Habitat",choices = hab_measure,width = "90%",
                                                   multiple = TRUE,selected = NULL,
                                                   options = list(`actions-box` = TRUE, `maxOptions` = 1)),
-                                      pickerInput("wq","Water Quality & Quanatity",choices = wq_measure,width = "90%",
+                                      pickerInput("wq","Water Quality & Quantity",choices = wq_measure,width = "90%",
                                                   multiple = TRUE,selected = NULL,
                                                   options = list(`actions-box` = TRUE,maxOptions = 1)),
                                       pickerInput("lcmr","Living Coastal Marine Resource",choices = lcmr_measure,width = "90%",
                                                   multiple = TRUE,selected = NULL,
                                                   options = list(`actions-box` = TRUE,maxOptions = 1)),
-                                      pickerInput("cl","Community Resillience",choices = cl_measure,width = "90%",
+                                      pickerInput("cl","Community Resilience",choices = cl_measure,width = "90%",
                                                   multiple = TRUE,selected = NULL,
                                                   options = list(`actions-box` = TRUE,maxOptions = 1)),
                                       pickerInput("eco","Gulf Economy",choices = eco_measure,width = "90%",
                                                   multiple = TRUE,selected = NULL,
                                                   options = list(`actions-box` = TRUE,maxOptions = 1))
                                       ), 
-                                      actionButton("nextto3","Next"),
-                                      actionButton("individual1","Explore individual dataset with r shiny", onclick = "window.open('https://scagulf.shinyapps.io/singlemeasure/')"),
-                                      actionButton("individual","Explore individual dataset", onclick = "window.open('http://natureserve.maps.arcgis.com/apps/webappviewer/index.html?id=ff30f1fe18444fa9a4bc0b0ed50b32b2')")
+                                      actionButton("nextto3","Load measures selected"),
+                                      actionButton("individual1","Explore individual dataset with r shiny", onclick = "window.open('https://scagulf.shinyapps.io/singlemeasure8/')")
                                       ),
                       bsCollapsePanel("Goal weights", value = "Panel 3", 
-                                      sliderInput("habslide","Habitat",min=0,max=100,value = 20,step = 10),
-                                      sliderInput("wqslide","Water Quality",min=0,max=100,value = 20,step = 10),
-                                      sliderInput("lcmrslide","LCMR",min=0,max=100,value = 20,step = 10),
-                                      sliderInput("clslide","Community Resilience",min=0,max=100,value = 20,step = 10),
-                                      sliderInput("ecoslide","Economy",min=0,max=100,value = 20,step = 10),
-                                      actionButton("nextto4","Next"),
+                                      
+                                      sliderInput("habslide","Habitat",min=0,max=100,value = 0,step = 10),
+                                      sliderInput("wqslide","Water Quality",min=0,max=100,value = 0,step = 10),
+                                      sliderInput("lcmrslide","LCMR",min=0,max=100,value = 0,step = 10),
+                                      sliderInput("clslide","Community Resilience",min=0,max=100,value = 0,step = 10),
+                                      sliderInput("ecoslide","Economy",min=0,max=100,value = 0,step = 10),
+                                      p("Total sum:"),
+                                      verbatimTextOutput("sumgoalweight"),
+                                      actionButton("nextto4","Finalize goal weights"),
                                       style = "primary"),
                       bsCollapsePanel("Review & Result",value="Panel 4", 
                                       "Review the weights options below and proceed to result",

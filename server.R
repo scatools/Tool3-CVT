@@ -27,7 +27,7 @@ function(input, output, session) {
 #finish the first select panel
   observeEvent(input$nextto2,{
     if(input$geography=="region"){
-      data1<<-data0
+      #data1<<-data0
       updateCollapse(session, "collapseExample", open = "Panel 2")
     }else if(input$geography=="states"){
       if(is.null(index$state)){
@@ -39,8 +39,12 @@ function(input, output, session) {
       else{
         datastate_final<-datastate[datastate$Name %in% index$state]
         #data1<<-st_join(data0, datastate_final, join = st_intersects)
-        data1<<-data0
+        #data1<<-data0
         updateCollapse(session, "collapseExample", open = "Panel 2")
+        showModal(modalDialog(
+          title = "Under development",footer = modalButton("Ok"),
+          "State visualization is still under development, the result would still show up as a regionwide visualization."
+        ))
       }
     }
   })
@@ -145,6 +149,58 @@ function(input, output, session) {
 
     }else{
       updateCollapse(session, "collapseExample", open = "Panel 3")
+      
+    }
+  })
+#render table for goal weights selection
+  output$goalweight <- renderTable({
+    data.frame(Goal = c("Habitat","Water Quality & Quantity","Living Coastal & Marine Resource","Community Resilience","Gulf Economy"),
+               Weights=c(input$habslide,input$wqslide,input$lcmrslide,input$clslide,input$ecoslide))
+  })
+
+#finish the thrid select panel
+  observeEvent(input$nextto4,{
+    if((input$habslide+input$wqslide+input$lcmrslide+input$clslide+input$ecoslide)!=100){
+      showModal(modalDialog(
+        title = "The weights should sum up to 100.",footer = modalButton("Ok"),
+        "Please go back and review the weights."
+      ))
+    }
+    else{
+      updateCollapse(session, "collapseExample", open = "Panel 4")
+      #print(head(data1$hab_f))
+      #print(class(data1$hab_f))
+      #print(input$habslide)
+      #print(class(input$habslide))
+
+      
+
+    }
+  })
+#finish the last select panel
+  observeEvent(input$nextto1,{
+    index$hab1<-input$habslide
+    index$wq1<-input$wqslide
+    index$lcmr1<-input$lcmrslide
+    index$cl1<-input$clslide
+    index$eco1<-input$ecoslide
+    if(is.null(index$hab) &
+       is.null(index$wq) &
+       is.null(index$lcmr ) &
+       is.null(index$cl) &
+       is.null(index$eco)){
+      showModal(modalDialog(
+        title = "At least one data measure needed",footer = modalButton("Ok"),
+        "Please select some data measures."
+      ))
+      
+    }else if((index$hab1+index$wq1+index$lcmr1+index$cl1+index$eco1)!=100){
+        showModal(modalDialog(
+          title = "The weights should sum up to 100.",footer = modalButton("Ok"),
+          "Please go back and review the weights."
+        ))
+    }else{
+    #updateCollapse(session, "collapseExample", open = "Panel 1")
       if(!is.null(index$hab)){
         print(index$hab[1])
         print(eval(parse(text = paste0("input$weight",index$hab[1]))))
@@ -156,7 +212,7 @@ function(input, output, session) {
           if(eval(parse(text = paste0("input$switch",index$hab[i])))){
             tmp1 <-tmp1
           }else if(eval(parse(text = paste0("input$switch",index$hab[i])))==FALSE){
-            tmp1 <-1-1*tmp1
+            tmp1 <-1-tmp1
           }
           if(is.null(tmp)){
             tmp<-tmp1
@@ -270,67 +326,202 @@ function(input, output, session) {
       if(is.null(index$hab)){
         data1$hab_f<<-data1$padus*0
       }
-    }
-  })
-#render table for goal weights selection
-  output$goalweight <- renderTable({
-    data.frame(Goal = c("Habitat","Water Quality & Quanatity","Living Cosatal & Marine Resource","Community Resiliense","Gulf Economy"),
-               Weights=c(input$habslide,input$wqslide,input$lcmrslide,input$clslide,input$ecoslide))
-  })
-
-#finish the thrid select panel
-  observeEvent(input$nextto4,{
-    if((input$habslide+input$wqslide+input$lcmrslide+input$clslide+input$ecoslide)!=100){
-      showModal(modalDialog(
-        title = "The weights should sum up to 100.",footer = modalButton("Ok"),
-        "Please go back and review the weights."
-      ))
-    }
-    else{
-      updateCollapse(session, "collapseExample", open = "Panel 4")
-      #print(head(data1$hab_f))
-      #print(class(data1$hab_f))
-      #print(input$habslide)
-      #print(class(input$habslide))
-
-      data1$weight<<-(data1$hab_f*input$habslide+data1$wq_f*input$wqslide+data1$lcmr_f*input$lcmrslide+data1$cl_f*input$clslide+data1$eco_f*input$ecoslide)/100
-
-
-    }
-  })
-#finish the last select panel
-  observeEvent(input$nextto1,{
-    updateCollapse(session, "collapseExample", open = "Panel 1")
-    
-    pal <- colorBin("YlOrRd", domain =data1$weight, bins = bins)
-    cols = colour_values_rgb(pal(data1$weight), include_alpha = FALSE) / 255
+      
+      data1$weight<<-(data1$hab_f*index$hab1+data1$wq_f*index$wq1+data1$lcmr_f*index$lcmr1+data1$cl_f*index$cl1+data1$eco_f*index$eco1)/100
+     
+     tmpmax = max(data1$weight)
+     data1$weight<- data1$weight/tmpmax
+     data1$weight<-round(data1$weight,2)
+     
+    cols = colour_values_rgb(.bincode(data1$weight, b, FALSE, TRUE)/4, palette="ylorrd", include_alpha = FALSE) / 255
+    showModal(modalDialog(
+      title = "The map is on your way",footer = modalButton("Ok"),
+      "Based on the large volume of computation, please allow up to 25 seconds for the map to load."
+    ))
 
     leafletProxy("myMap")%>%
       clearGroup("weight")%>% 
       clearControls()%>%
-      addGlPolygons(data = data1, color = cols,group = "weight")%>%
-      addLegend(labels =c("0-0.25","0.25-0.5","0.5-0.75","0.75-1") , colors = c("purple","cadetblue","darkolivegreen","yellow"), opacity = 0.7,
+      addGlPolygons(data = data1, color = cols,group = "weight", popup = "weight")%>%
+      addLegend(title = "Score",labels =c("0-0.25","0.25-0.5","0.5-0.75","0.75-1") , colors = c( "#FFFFCC", "#FEBF58","#F53B23" , "#800026"), opacity = 0.7,
               position = "bottomright")
-    
+    }
 
   })
   
   
 #finish the last select panel with the screening method  
   observeEvent(input$screening,{
-    updateCollapse(session, "collapseExample", open = "Panel 1")
+    index$hab1<-input$habslide
+    index$wq1<-input$wqslide
+    index$lcmr1<-input$lcmrslide
+    index$cl1<-input$clslide
+    index$eco1<-input$ecoslide
+    if(is.null(index$hab) &
+       is.null(index$wq) &
+       is.null(index$lcmr ) &
+       is.null(index$cl) &
+       is.null(index$eco)){
+      showModal(modalDialog(
+        title = "At least one data measure needed",footer = modalButton("Ok"),
+        "Please select some data measures."
+      ))
+      
+    }else if((index$hab1+index$wq1+index$lcmr1+index$cl1+index$eco1)!=100){
+      showModal(modalDialog(
+        title = "The weights should sum up to 100.",footer = modalButton("Ok"),
+        "Please go back and review the weights."
+      ))
+    }else{
+    #updateCollapse(session, "collapseExample", open = "Panel 1")
+      if(!is.null(index$hab)){
+        print(index$hab[1])
+        print(eval(parse(text = paste0("input$weight",index$hab[1]))))
+        tmp<-NULL
+        tmp2<-NULL
+        for(i in 1:length(index$hab)){
+          tmp2<-eval(parse(text = paste0("data1$",nameshab1[which(nameshab==index$hab[i])])))
+          tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$hab[i]))))/3
+          if(eval(parse(text = paste0("input$switch",index$hab[i])))){
+            tmp1 <-tmp1
+          }else if(eval(parse(text = paste0("input$switch",index$hab[i])))==FALSE){
+            tmp1 <-1-tmp1
+          }
+          if(is.null(tmp)){
+            tmp<-tmp1
+          }
+          else{
+            tmp<-tmp+tmp1
+          }
+        }
+        data1$hab_f<<-tmp/length(index$hab)
+      }
+      if(!is.null(index$wq)){
+        print(index$wq[1])
+        print(eval(parse(text = paste0("input$weight",index$wq[1]))))
+        tmp<-NULL
+        tmp2<-NULL
+        for(i in 1:length(index$wq)){
+          tmp2<-eval(parse(text = paste0("data1$",nameswq1[which(nameswq==index$wq[i])])))
+          tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$wq[i]))))/3
+          if(eval(parse(text = paste0("input$switch",index$wq[i])))){
+            tmp1 <-tmp1
+          }else if(eval(parse(text = paste0("input$switch",index$wq[i])))==FALSE){
+            tmp1 <-1-1*tmp1
+          }
+          if(is.null(tmp)){
+            tmp<-tmp1
+          }
+          else{
+            tmp<-tmp+tmp1
+          }
+        }
+        data1$wq_f<<-tmp/length(index$wq)
+      }
+      if(!is.null(index$lcmr)){
+        print(index$lcmr[1])
+        print(eval(parse(text = paste0("input$weight",index$lcmr[1]))))
+        tmp<-NULL
+        tmp2<-NULL
+        for(i in 1:length(index$lcmr)){
+          tmp2<-eval(parse(text = paste0("data1$",nameslcmr1[which(nameslcmr==index$lcmr[i])])))
+          tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$lcmr[i]))))/3
+          if(eval(parse(text = paste0("input$switch",index$lcmr[i])))){
+            tmp1 <-tmp1
+          }else if(eval(parse(text = paste0("input$switch",index$lcmr[i])))==FALSE){
+            tmp1 <-1-1*tmp1
+          }
+          if(is.null(tmp)){
+            tmp<-tmp1
+          }
+          else{
+            tmp<-tmp+tmp1
+          }
+        }
+        data1$lcmr_f<<-tmp/length(index$lcmr)
+      }
+      if(!is.null(index$cl)){
+        print(index$cl[1])
+        print(eval(parse(text = paste0("input$weight",index$cl[1]))))
+        tmp<-NULL
+        tmp2<-NULL
+        for(i in 1:length(index$cl)){
+          tmp2<-eval(parse(text = paste0("data1$",namescl1[which(namescl==index$cl[i])])))
+          tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$cl[i]))))/3
+          if(eval(parse(text = paste0("input$switch",index$cl[i])))){
+            tmp1 <-tmp1
+          }else if(eval(parse(text = paste0("input$switch",index$cl[i])))==FALSE){
+            tmp1 <-1-1*tmp1
+          }
+          if(is.null(tmp)){
+            tmp<-tmp1
+          }
+          else{
+            tmp<-tmp+tmp1
+          }
+        }
+        data1$cl_f<<-tmp/length(index$cl)
+      }
+      if(!is.null(index$eco)){
+        print(index$eco[1])
+        print(eval(parse(text = paste0("input$weight",index$eco[1]))))
+        tmp<-NULL
+        tmp2<-NULL
+        for(i in 1:length(index$eco)){
+          tmp2<-eval(parse(text = paste0("data1$",nameseco1[which(nameseco==index$eco[i])])))
+          tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$eco[i]))))/3
+          if(eval(parse(text = paste0("input$switch",index$eco[i])))){
+            tmp1 <-tmp1
+          }else if(eval(parse(text = paste0("input$switch",index$eco[i])))==FALSE){
+            tmp1 <-1-1*tmp1
+          }
+          if(is.null(tmp)){
+            tmp<-tmp1
+          }
+          else{
+            tmp<-tmp+tmp1
+          }
+        }
+        data1$eco_f<<-tmp/length(index$eco)
+      }
+      if(is.null(index$eco)){
+        data1$eco_f<<-data1$padus*0
+      }
+      if(is.null(index$cl)){
+        data1$cl_f<<-data1$padus*0
+      }
+      if(is.null(index$wq)){
+        data1$wq_f<<-data1$padus*0
+      }
+      if(is.null(index$lcmr)){
+        data1$lcmr_f<<-data1$padus*0
+      }
+      if(is.null(index$hab)){
+        data1$hab_f<<-data1$padus*0
+      }
+    index$hab1<-input$habslide
+    index$wq1<-input$wqslide
+    index$lcmr1<-input$lcmrslide
+    index$cl1<-input$clslide
+    index$eco1<-input$ecoslide
+    data1$weight<<-(data1$hab_f*index$hab1+data1$wq_f*index$wq1+data1$lcmr_f*index$lcmr1+data1$cl_f*index$cl1+data1$eco_f*index$eco1)/100
+    
     data1$weight1<-0
     data1$weight1[data1$weight>0.5]<-1
     cols = colour_values_rgb(data1$weight1, include_alpha = FALSE) / 255
+    showModal(modalDialog(
+      title = "The map is on your way",footer = modalButton("Ok"),
+      "Based on the large volume of computation, please allow up to 25 seconds for the map to load."
+    ))
     leafletProxy("myMap")%>%
       clearGroup("weight")%>% 
       clearControls()%>%
-      addGlPolygons(data = data1, color = cols,group = "weight")%>%
-      addLegend(labels =c("No passing the screening","Passed the screening") , colors = c("purple","yellow"), opacity = 0.7,
+      addGlPolygons(data = data1, color = cols,group = "weight", popup = "weight1")%>%
+      addLegend(title = "Result",labels =c("No passing the screening","Passed the screening") , colors = c("purple","yellow"), opacity = 0.7,
                 position = "bottomright")
     
     
-    
+    }
   })
 
 #future event for bookmark feature
@@ -343,6 +534,8 @@ function(input, output, session) {
     ))
 
   })
+  
+  output$sumgoalweight<-renderText(sum(input$habslide+input$wqslide+input$lcmrslide+input$clslide+input$ecoslide))
 
 
 #data measure selected for habitat
@@ -366,7 +559,7 @@ function(input, output, session) {
                                         label = "Utility",
                                         value = TRUE, col = "GB", type = "TF")),
                        div(style="display: inline-block;vertical-align:top; width: 250px;",
-                           selectInput(inputId = paste0("weight",tmp[i]),label = "Weight",choices = c("Zero"=0,"Low"=1,"Medium"=2,"High"=3),selected = 2)
+                           selectInput(inputId = paste0("weight",tmp[i]),label = "Weight",choices = c("Low"=1,"Medium"=2,"High"=3),selected = 3)
                        )
                       )
               )
@@ -404,7 +597,7 @@ function(input, output, session) {
                                         label = "Utility",
                                         value = TRUE, col = "GB", type = "TF")),
                        div(style="display: inline-block;vertical-align:top; width: 250px;",
-                           selectInput(inputId = paste0("weight",tmp[i]),label = "Weights",choices = c("Zero"=0,"Low"=1,"Medium"=2,"High"=3),selected = 2)
+                           selectInput(inputId = paste0("weight",tmp[i]),label = "Weights",choices = c("Low"=1,"Medium"=2,"High"=3),selected = 3)
                        )
                    )
           )
@@ -442,7 +635,7 @@ function(input, output, session) {
                                         label = "Utility",
                                         value = TRUE, col = "GB", type = "TF")),
                        div(style="display: inline-block;vertical-align:top; width: 250px;",
-                           selectInput(inputId = paste0("weight",tmp[i]),label = "Weights",choices = c("Zero"=0,"Low"=1,"Medium"=2,"High"=3),selected = 2)
+                           selectInput(inputId = paste0("weight",tmp[i]),label = "Weights",choices = c("Low"=1,"Medium"=2,"High"=3),selected = 3)
                        )
                    )
           )
@@ -480,7 +673,7 @@ function(input, output, session) {
                                         label = "Utility",
                                         value = TRUE, col = "GB", type = "TF")),
                        div(style="display: inline-block;vertical-align:top; width: 250px;",
-                           selectInput(inputId = paste0("weight",tmp[i]),label = "Weights",choices = c("Zero"=0,"Low"=1,"Medium"=2,"High"=3),selected = 2)
+                           selectInput(inputId = paste0("weight",tmp[i]),label = "Weights",choices = c("Low"=1,"Medium"=2,"High"=3),selected = 3)
                        )
                    )
           )
@@ -517,7 +710,7 @@ function(input, output, session) {
                                         label = "Utility",
                                         value = TRUE, col = "GB", type = "TF")),
                        div(style="display: inline-block;vertical-align:top; width: 250px;",
-                           selectInput(inputId = paste0("weight",tmp[i]),label = "Weights",choices = c("Zero"=0,"Low"=1,"Medium"=2,"High"=3),selected = 2)
+                           selectInput(inputId = paste0("weight",tmp[i]),label = "Weights",choices = c("Low"=1,"Medium"=2,"High"=3),selected = 2)
                        )
                    )
           )
@@ -537,6 +730,39 @@ function(input, output, session) {
     index$eco<-input$eco
 
   }, ignoreNULL = FALSE)
+  
+  observe({
+    shinyjs::hide("habslide")
+    shinyjs::hide("wqslide")
+    shinyjs::hide("lcmrslide")
+    shinyjs::hide("clslide")
+    shinyjs::hide("ecoslide")
+    if(!is.null(index$hab)){
+      shinyjs::show("habslide")
+    }else{
+      updateSliderInput(session,"habslide",value=0)
+    }
+    if(!is.null(index$wq)){
+      shinyjs::show("wqslide")
+    }else{
+      updateSliderInput(session,"wqslide",value=0)
+    }
+    if(!is.null(index$lcmr)){
+      shinyjs::show("lcmrslide")
+    }else{
+      updateSliderInput(session,"lcmrslide",value=0)
+    }
+    if(!is.null(index$cl)){
+      shinyjs::show("clslide")
+    }else{
+      updateSliderInput(session,"clslide",value=0)
+    }
+    if(!is.null(index$eco)){
+      shinyjs::show("ecoslide")
+    }else{
+      updateSliderInput(session,"ecoslide",value=0)
+    }
+  })
 
 
 

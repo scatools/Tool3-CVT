@@ -36,12 +36,12 @@ eco_measure_name<-c("Working Lands ","Commercial Fishery Index ", "Recreational 
 
 data0<-st_read('./data/sca_landonly_withdata.shp')
 data0<-st_transform(data0,crs = 4326)
+data1<-data0
 
 datastate<-st_read('./data/SECoastStates.shp')
 datastate<-st_transform(datastate,crs = 4326)
 
-bins <- c(0, 0.25, 0.5, 0.75, 1)
-
+b <- c(-Inf, 0.25, 0.5, 0.75, Inf)
 nameshab<-c("hab1","hab2","hab3","hab4")
 nameshab1<-c("padus","area_conne","Sleuth_v2","conl_index")
 nameswq<-c("wq1","wq2")

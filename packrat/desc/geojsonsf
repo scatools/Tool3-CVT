@@ -1,0 +1,34 @@
+Package: geojsonsf
+Type: Package
+Title: GeoJSON to Simple Feature Converter
+Version: 1.3.2
+Date: 2019-04-24
+Authors@R: c(
+    person("David", "Cooley", ,"dcooley@symbolix.com.au", role = c("aut", "cre"))
+    )
+Description: Converts Between GeoJSON and simple feature objects. 
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.3.0)
+LinkingTo: BH, jsonify (>= 0.2.1), rapidjsonr (>= 1.1), Rcpp
+Imports: curl, Rcpp
+RoxygenNote: 6.1.1
+Suggests: covr, jsonify, knitr, rmarkdown, testthat
+VignetteBuilder: knitr
+RemoteType: github
+RemoteHost: api.github.com
+RemoteRepo: geojsonsf
+RemoteUsername: SymbolixAU
+RemoteRef: master
+RemoteSha: 94eb225388693228dadac9772fcf02ca6f804fc6
+GithubRepo: geojsonsf
+GithubUsername: SymbolixAU
+GithubRef: master
+GithubSHA1: 94eb225388693228dadac9772fcf02ca6f804fc6
+NeedsCompilation: yes
+Packaged: 2019-09-10 05:41:46 UTC; jliu
+Author: David Cooley [aut, cre]
+Maintainer: David Cooley <dcooley@symbolix.com.au>
+Built: R 3.6.0; x86_64-w64-mingw32; 2019-09-10 05:41:47 UTC; windows
+Archs: i386, x64
