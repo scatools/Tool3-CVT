@@ -74,7 +74,7 @@ body <- dashboardBody(
                                                   options = list(`actions-box` = TRUE,maxOptions = 1))
                                       ), 
                                       actionButton("nextto3","Load measures selected"),
-                                      actionButton("individual1","Explore individual dataset with r shiny", onclick = "window.open('https://scagulf.shinyapps.io/singlemeasure8/')")
+                                      actionButton("individual1","Explore individual dataset with r shiny", onclick = "window.open('https://scagulf.shinyapps.io/SingleMeasureV1/')")
                                       ),
                       bsCollapsePanel("Goal weights", value = "Panel 3", 
                                       
