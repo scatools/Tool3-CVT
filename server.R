@@ -207,7 +207,7 @@ function(input, output, session) {
         tmp<-NULL
         tmp2<-NULL
         for(i in 1:length(index$hab)){
-          tmp2<-eval(parse(text = paste0("data1$",nameshab1[which(nameshab==index$hab[i])])))
+          tmp2<-as.numeric(eval(parse(text = paste0("data1$",nameshab1[which(nameshab==index$hab[i])]))))
           tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$hab[i]))))/3
           if(eval(parse(text = paste0("input$switch",index$hab[i])))){
             tmp1 <-tmp1
@@ -229,7 +229,7 @@ function(input, output, session) {
         tmp<-NULL
         tmp2<-NULL
         for(i in 1:length(index$wq)){
-          tmp2<-eval(parse(text = paste0("data1$",nameswq1[which(nameswq==index$wq[i])])))
+          tmp2<-as.numeric(eval(parse(text = paste0("data1$",nameswq1[which(nameswq==index$wq[i])]))))
           tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$wq[i]))))/3
           if(eval(parse(text = paste0("input$switch",index$wq[i])))){
             tmp1 <-tmp1
@@ -251,7 +251,7 @@ function(input, output, session) {
         tmp<-NULL
         tmp2<-NULL
         for(i in 1:length(index$lcmr)){
-          tmp2<-eval(parse(text = paste0("data1$",nameslcmr1[which(nameslcmr==index$lcmr[i])])))
+          tmp2<-as.numeric(eval(parse(text = paste0("data1$",nameslcmr1[which(nameslcmr==index$lcmr[i])]))))
           tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$lcmr[i]))))/3
           if(eval(parse(text = paste0("input$switch",index$lcmr[i])))){
             tmp1 <-tmp1
@@ -273,7 +273,7 @@ function(input, output, session) {
         tmp<-NULL
         tmp2<-NULL
         for(i in 1:length(index$cl)){
-          tmp2<-eval(parse(text = paste0("data1$",namescl1[which(namescl==index$cl[i])])))
+          tmp2<-as.numeric(eval(parse(text = paste0("data1$",namescl1[which(namescl==index$cl[i])]))))
           tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$cl[i]))))/3
           if(eval(parse(text = paste0("input$switch",index$cl[i])))){
             tmp1 <-tmp1
@@ -295,7 +295,7 @@ function(input, output, session) {
         tmp<-NULL
         tmp2<-NULL
         for(i in 1:length(index$eco)){
-          tmp2<-eval(parse(text = paste0("data1$",nameseco1[which(nameseco==index$eco[i])])))
+          tmp2<-as.numeric(eval(parse(text = paste0("data1$",nameseco1[which(nameseco==index$eco[i])]))))
           tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$eco[i]))))/3
           if(eval(parse(text = paste0("input$switch",index$eco[i])))){
             tmp1 <-tmp1
@@ -332,8 +332,8 @@ function(input, output, session) {
      tmpmax = max(data1$weight)
      data1$weight<- data1$weight/tmpmax
      data1$weight<-round(data1$weight,2)
-     
-    cols = colour_values_rgb(.bincode(data1$weight, b, FALSE, TRUE)/4, palette="ylorrd", include_alpha = FALSE) / 255
+ #"ylorrd"    
+    cols = colour_values_rgb(.bincode(data1$weight, b, FALSE, TRUE)/6, palette="ylorrd", include_alpha = FALSE) / 255 ### #
     showModal(modalDialog(
       title = "The map is on your way",footer = modalButton("Ok"),
       "Based on the large volume of computation, please allow up to 25 seconds for the map to load."
@@ -343,12 +343,15 @@ function(input, output, session) {
       clearGroup("weight")%>% 
       clearControls()%>%
       addGlPolygons(data = data1, color = cols,group = "weight", popup = "weight")%>%
-      addLegend(title = "Score",labels =c("0-0.25","0.25-0.5","0.5-0.75","0.75-1") , colors = c( "#FFFFCC", "#FEBF58","#F53B23" , "#800026"), opacity = 0.7,
+      addLegend(title = "Score",labels=c("0","0.01-0.25","0.25-0.5","0.5-0.75","0.75-0.99","1") , colors = c("#FFFFB2", "#FED976", "#FEB24C","#FD8D3C","#F03B20","#BD0026"), opacity = 0.7,
               position = "bottomright")
     }
-
+    #c("#FFFFCC", "#FFEDA0", "#FED976", "#FEB24C", "#FD8D3C","#FC4E2A","#E31A1C","#B10026","#800026") 9 classes
+    #c("#FFFFCC", "#FFEDA0", "#FED976", "#FEB24C", "#FD8D3C","#FC4E2A","#E31A1C","#B10026") 8 classes   
+    #c("#FFFFB2", "#FED976", "#FEB24C", "#FD8D3C", "#FC4E2A","#E31A1C","#B10026") 7 classes
+    #c("#FFFFB2", "#FED976", "#FEB24C","#FD8D3C","#F03B20","#BD0026") 6 classes
   })
-  
+ 
   
 #finish the last select panel with the screening method  
   observeEvent(input$screening,{
@@ -380,7 +383,7 @@ function(input, output, session) {
         tmp<-NULL
         tmp2<-NULL
         for(i in 1:length(index$hab)){
-          tmp2<-eval(parse(text = paste0("data1$",nameshab1[which(nameshab==index$hab[i])])))
+          tmp2<-as.numeric(eval(parse(text = paste0("data1$",nameshab1[which(nameshab==index$hab[i])]))))
           tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$hab[i]))))/3
           if(eval(parse(text = paste0("input$switch",index$hab[i])))){
             tmp1 <-tmp1
@@ -402,7 +405,7 @@ function(input, output, session) {
         tmp<-NULL
         tmp2<-NULL
         for(i in 1:length(index$wq)){
-          tmp2<-eval(parse(text = paste0("data1$",nameswq1[which(nameswq==index$wq[i])])))
+          tmp2<-as.numeric(eval(parse(text = paste0("data1$",nameswq1[which(nameswq==index$wq[i])]))))
           tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$wq[i]))))/3
           if(eval(parse(text = paste0("input$switch",index$wq[i])))){
             tmp1 <-tmp1
@@ -424,7 +427,7 @@ function(input, output, session) {
         tmp<-NULL
         tmp2<-NULL
         for(i in 1:length(index$lcmr)){
-          tmp2<-eval(parse(text = paste0("data1$",nameslcmr1[which(nameslcmr==index$lcmr[i])])))
+          tmp2<-as.numeric(eval(parse(text = paste0("data1$",nameslcmr1[which(nameslcmr==index$lcmr[i])]))))
           tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$lcmr[i]))))/3
           if(eval(parse(text = paste0("input$switch",index$lcmr[i])))){
             tmp1 <-tmp1
@@ -446,7 +449,7 @@ function(input, output, session) {
         tmp<-NULL
         tmp2<-NULL
         for(i in 1:length(index$cl)){
-          tmp2<-eval(parse(text = paste0("data1$",namescl1[which(namescl==index$cl[i])])))
+          tmp2<-as.numeric(eval(parse(text = paste0("data1$",namescl1[which(namescl==index$cl[i])]))))
           tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$cl[i]))))/3
           if(eval(parse(text = paste0("input$switch",index$cl[i])))){
             tmp1 <-tmp1
@@ -468,7 +471,7 @@ function(input, output, session) {
         tmp<-NULL
         tmp2<-NULL
         for(i in 1:length(index$eco)){
-          tmp2<-eval(parse(text = paste0("data1$",nameseco1[which(nameseco==index$eco[i])])))
+          tmp2<-as.numeric(eval(parse(text = paste0("data1$",nameseco1[which(nameseco==index$eco[i])]))))
           tmp1<-tmp2*as.numeric(eval(parse(text = paste0("input$weight",index$eco[i]))))/3
           if(eval(parse(text = paste0("input$switch",index$eco[i])))){
             tmp1 <-tmp1
@@ -710,7 +713,7 @@ function(input, output, session) {
                                         label = "Utility",
                                         value = TRUE, col = "GB", type = "TF")),
                        div(style="display: inline-block;vertical-align:top; width: 250px;",
-                           selectInput(inputId = paste0("weight",tmp[i]),label = "Weights",choices = c("Low"=1,"Medium"=2,"High"=3),selected = 2)
+                           selectInput(inputId = paste0("weight",tmp[i]),label = "Weights",choices = c("Low"=1,"Medium"=2,"High"=3),selected = 3)
                        )
                    )
           )

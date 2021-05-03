@@ -1,8 +1,8 @@
 Package: leafpop
 Type: Package
 Title: Include Tables, Images and Graphs in Leaflet Pop-Ups
-Version: 0.0.5
-Date: 2019-12-09
+Version: 0.0.6
+Date: 2020-09-18
 Authors@R: 
     c(person(given = "Tim",
              family = "Appelhans",
@@ -18,14 +18,16 @@ Description: Creates 'HTML' strings to embed tables, images or graphs in pop-ups
   local images located on the file system or via remote URL. Handles graphs created 
   with 'lattice' or 'ggplot2' as well as interactive plots created with 'htmlwidgets'.
 License: MIT + file LICENSE
+URL: https://github.com/r-spatial/leafpop
+BugReports: https://github.com/r-spatial/leafpop/issues
 Encoding: UTF-8
 Imports: base64enc, brew, htmltools, htmlwidgets, sf, svglite, uuid
 Suggests: lattice, leaflet (>= 2.0.0), sp
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2019-12-09 18:46:38 UTC; timpanse
+Packaged: 2020-09-22 17:19:13 UTC; timpanse
 Author: Tim Appelhans [cre, aut],
   Florian Detsch [aut]
 Repository: CRAN
-Date/Publication: 2019-12-09 19:50:02 UTC
-Built: R 3.6.2; ; 2020-02-22 06:03:10 UTC; windows
+Date/Publication: 2020-09-22 18:30:03 UTC
+Built: R 3.6.3; ; 2020-12-07 11:11:19 UTC; windows
