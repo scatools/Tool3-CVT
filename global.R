@@ -21,14 +21,14 @@ library(colourvalues)
 #Since we removed stream abundance (wq2), the naming convention in the code has required a shift in naming wq parameters.  
 #Thus, hydro response to land use change is now "wq2" instead of "wq3" (and so on) so that the code in the server doesn't have to shift.  
 #Please reflect that change in the CPT names as well.
-hab_measure<-c( "Connectivity to Existing Protected Area "="hab1","Connectivity of Natural Lands "="hab2","Threat of Urbanization "="hab3","Composition of Natural Lands "="hab4")
+hab_measure<-c( "Connectivity to Existing Protected Area "="hab1","Connectivity of Natural Lands "="hab2","Threat of Urbanization "="hab3","Composition of Priority Natural Lands "="hab4")
 wq_measure<-c("303D: Impaired Watershed Area "="wq1","Hydrologic Response to Land-Use Change "="wq2","Percent Irrigated Agriculture "="wq3","Lateral Connectivity to Floodplain "="wq4","Composition of Riparian Zone Lands "="wq5","Presence of Impoundments "="wq6")
 lcmr_measure<-c("Vulnerable Areas of Terrestrial Endemic Species "="lcmr1", "Threatened and Endangered Species - Critical Habitat Area "="lcmr2","Threatened and Endangered Species - Number of Species "="lcmr3","Light Pollution Index "="lcmr4","Terrestrial Vertebrate Biodiversity "="lcmr5")
 cl_measure<-c("National Register of Historic Places "="cl1","National Heritage Area "="cl2","Proximity to Socially Vulnerable Communities "="cl3","Community Threat Index "="cl4")
 eco_measure<-c("High Priority Working Lands "="eco1","Commercial Fishing Reliance "="eco2", "Recreational Fishing Engagement "="eco3","Access & Recreation: Number of Access Points "="eco4")
 
 
-hab_measure_name<-c( "Connectivity to Existing Protected Area ","Connectivity of Natural Lands ","Threat of Urbanization ","Composition of Natural Lands ")
+hab_measure_name<-c( "Connectivity to Existing Protected Area ","Connectivity of Natural Lands ","Threat of Urbanization ","Composition of Priority Natural Lands ")
 wq_measure_name<-c("303D: Impaired Watershed Area ","Hydrologic Response to Land-Use Change ","Percent Irrigated Agriculture ","Lateral Connectivity to Floodplain ","Composition of Riparian Zone Lands ","Presence of Impoundments ")
 lcmr_measure_name<-c("Vulnerable Areas of Terrestrial Endemic Species ", "Threatened and Endangered Species - Critical Habitat Area ","Threatened and Endangered Species - Number of Species ","Light Pollution Index ","Terrestrial Vertebrate Biodiversity ")
 cl_measure_name<-c("National Register of Historic Places ","National Heritage Area ","Proximity to Socially Vulnerable Communities ","Community Threat Index ")
