@@ -21,7 +21,19 @@ function(input, output, session) {
     leaflet() %>%
       addProviderTiles(provider = providers$CartoDB.DarkMatter)%>%
             setView(-90.4369, 28.9072,5)%>%
-            addFullscreenControl()
+            addFullscreenControl()%>%
+      addEsriTiledMapLayer(
+            url = "https://services1.arcgis.com/cYEfxjk21j8UlsTQ/arcgis/rest/services/PADUS2_Fee_Easement_Designation/MapServer",
+            options = providerTileOptions(opacity = 0.5),group = "PAD-US")%>%
+      addEsriDynamicMapLayer(
+            url = "https://gis.usgs.gov/sciencebase2/rest/services/Catalog/5da9e701e4b09fd3b0c9cb6a/MapServer",
+            options = dynamicMapLayerOptions(opacity = 0.5),group = "SECAS")%>%
+      addLegend(position = "bottomright",colors = c("#4FAFEE","#0B316B"),
+                labels = c("Medium conservation value","High conservation value"),opacity = 0.5,group = "SECAS")%>%
+      addLayersControl(overlayGroups = c("PAD-US","SECAS"),
+                      position="bottomleft")%>%
+      hideGroup("PAD-US")%>%
+      hideGroup("SECAS")
   })
 
 #finish the first select panel
