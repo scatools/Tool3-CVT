@@ -1,0 +1,13 @@
+name: CVTv2
+title: CVTv2
+username:
+account: scagulf
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4330225
+bundleId: 4765879
+url: https://scagulf.shinyapps.io/CVTv2/
+when: 1624908955.33317
+lastSyncTime: 1624908955.33317
+asMultiple: FALSE
+asStatic: FALSE

@@ -35,7 +35,7 @@ cl_measure_name<-c("National Register of Historic Places ","National Heritage Ar
 eco_measure_name<-c("High Priority Working Lands ","Commercial Fishing Reliance ", "Recreational Fishing Engagement ","Access & Recreation: Number of Access Points ")
 
 
-data0<-st_read('./data/sca_landonly_withdata5.shp')
+data0<-st_read('./data/sca_landonly_withdata6.shp')
 data0<-st_transform(data0,crs = 4326)
 data1<-data0
 
